@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/MyNCCLDemo.dir/src/allreduce.cc.o CMakeFiles/MyNCCLDemo.dir/src/bootstrap.cc.o CMakeFiles/MyNCCLDemo.dir/src/group.cc.o CMakeFiles/MyNCCLDemo.dir/src/init.cc.o CMakeFiles/MyNCCLDemo.dir/src/socket.cc.o CMakeFiles/MyNCCLDemo.dir/demo.cc.o -o MyNCCLDemo  -Wl,-rpath,/usr/local/openmpi/lib /usr/local/openmpi/lib/libmpi.so 

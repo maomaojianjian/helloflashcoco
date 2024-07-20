@@ -1,0 +1,3 @@
+/data/flashcoco/build/CMakeFiles/MyNCCLDemo.dir
+/data/flashcoco/build/CMakeFiles/edit_cache.dir
+/data/flashcoco/build/CMakeFiles/rebuild_cache.dir
