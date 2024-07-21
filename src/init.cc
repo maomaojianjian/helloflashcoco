@@ -49,19 +49,19 @@ void initEnv() {
   const char * userDir = userHomeDir();
   if (userDir) {
     sprintf(confFilePath, "%s/.nccl.conf", userDir);
-    printf("%s/.nccl.conf", userDir);
+    printf("%s/.nccl.conf \n", userDir);
     setEnvFile(confFilePath);
     return;
   }
   sprintf(confFilePath, "/etc/nccl.conf");
-  printf("%s/.nccl.conf", userDir);
+  printf("%s/.nccl.conf\n", userDir);
   setEnvFile(confFilePath);
 }
 
 static void initOnceFunc() {
   initEnv();
-  printf("Always initialize bootstrap network");
-  bootstrapNetInit(); 
+  printf("Always initialize bootstrap network\n");
+  bootstrapNetInit();
 }
 
 static pthread_once_t initOnceControl = PTHREAD_ONCE_INIT;
@@ -73,7 +73,8 @@ static int ncclInit() {
 
 int ncclGetUniqueId(ncclUniqueId* out) {
   ncclInit();
-  // int res = bootstrapGetUniqueId((struct ncclBootstrapHandle*)out); // magic+addr
+  int res = 0;
+  // res = bootstrapGetUniqueId((struct ncclBootstrapHandle*)out); // magic+addr
   return res;
 }
 

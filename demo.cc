@@ -77,7 +77,8 @@ int main(int argc, char *argv[]) {
   //   // ncclAllReduce((const void *)(sendbuff + i), (void *)(recvbuff + i),
   //   //                         size, ncclFloat, ncclSum, comms[i], s[i]);
   // ncclGroupEnd();
-
+  free(sendbuff);
+  free(recvbuff);
   MPI_Finalize();
 
   printf("[MPI Rank %d] Success \n", myRank);

@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include "init.h"
 #include <string.h>
+#include <iostream>
 
 
 
@@ -18,7 +19,7 @@ int bootstrapNetInit() {
     pthread_mutex_lock(&bootstrapNetLock);
     if (bootstrapNetInitDone == 0) {
       const char* env = NCCL_COMM_ID; //<IPv4_or_hostname>:<port>
-      std::cout << "NCCL_COMM_ID:" << env << std::endl;
+      printf("NCCL_COMM_ID:%s\n", env);
       if (env) {
         union ncclSocketAddress remoteAddr;
         if (ncclSocketGetAddrFromString(&remoteAddr, env) != 0) { // 这里是远程的ip和端口
@@ -26,14 +27,13 @@ int bootstrapNetInit() {
           pthread_mutex_unlock(&bootstrapNetLock);
           return -1;
         }
-        std::cout<< "remoteAddr:" << remoteAddr << std::endl;
          // 这里根据远程的ip和端口，获取在子网内，本机的接口名称和地址
         if (ncclFindInterfaceMatchSubnet(bootstrapNetIfName, &bootstrapNetIfAddr, &remoteAddr, MAX_IF_NAME_SIZE, 1) <= 0) {
-          printf("NET/Socket : No usable listening interface found");
+          printf("\nNET/Socket : No usable listening interface found\n");
           pthread_mutex_unlock(&bootstrapNetLock);
           return -1;
         }
-        std::cout<< "bootstrapNetIfName:" << bootstrapNetIfName << "  bootstrapNetIfAddr:" << bootstrapNetIfAddr << std::endl;
+        printf("bootstrapNetIfName: %s, bootstrapNetIfAddr: %s\n", bootstrapNetIfName, bootstrapNetIfAddr);
       } else {
         int nIfs = ncclFindInterfaces(bootstrapNetIfName, &bootstrapNetIfAddr, MAX_IF_NAME_SIZE, 1);
         if (nIfs <= 0) {

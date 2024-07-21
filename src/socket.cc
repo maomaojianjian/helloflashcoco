@@ -277,6 +277,7 @@ int ncclFindInterfaceMatchSubnet(char* ifNames, union ncclSocketAddress* localAd
     // Store the local IP address
     int salen = (family == AF_INET) ? sizeof(struct sockaddr_in) : sizeof(struct sockaddr_in6);
     memcpy(localAddrs+found, interface->ifa_addr, salen);
+    printf("interface->ifa_addr:%s, salen:%d \n", interface->ifa_addr->sa_data, salen);
 
     // Store the interface name
     strncpy(ifNames+found*ifNameMaxSize, interface->ifa_name, ifNameMaxSize);
@@ -301,6 +302,11 @@ int ncclSocketGetAddrFromString(union ncclSocketAddress* ua, const char* ip_port
   /* Construct the sockaddress structure */
   if (!ipv6) {
     struct netIf ni;
+    // parse <ip_or_hostname>:<port> string, expect one pair
+    if (parseStringList(ip_port_pair, &ni, 1) != 1) {
+      printf("Net : No valid <IPv4_or_hostname>:<port> pair found");
+      return -1;
+    }
 
     struct addrinfo hints, *p;
     int rv;
@@ -308,8 +314,13 @@ int ncclSocketGetAddrFromString(union ncclSocketAddress* ua, const char* ip_port
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
 
+    if ( (rv = getaddrinfo(ni.prefix, NULL, &hints, &p)) != 0) {
+      printf("Net : error encountered when getting address info : %s", gai_strerror(rv));
+      return -1;
+    }
+
     // use the first
-    if (p->ai_family == AF_INET) {
+    if (p->ai_family == AF_INET) {    
       struct sockaddr_in& sin = ua->sin;
       memcpy(&sin, p->ai_addr, sizeof(struct sockaddr_in));
       sin.sin_family = AF_INET;                        // IPv4
